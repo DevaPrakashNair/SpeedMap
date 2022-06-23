@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/psychomap.iml" filepath="$PROJECT_DIR$/psychomap.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/psychomap_android.iml" filepath="$PROJECT_DIR$/android/psychomap_android.iml" />
     </modules>
   </component>
 </project>
