@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:psychomap/drawer.dart';
 
 import 'directions_model.dart';
 import 'directions_repository.dart';
@@ -21,9 +22,6 @@ class _MapSampleState extends State<MapSample> {
   Marker? _origin;
   Marker? _destination;
   Directions? _info;
-  Set<Polyline> _polyline=Set<Polyline>();
-  List<LatLng> polylineCoordinates=[];
-  PolylinePoints? polylinePoints;
 
 
   @override
@@ -35,7 +33,6 @@ class _MapSampleState extends State<MapSample> {
   @override
   void initState() {
     // TODO: implement initState
-    polylinePoints=PolylinePoints();
     super.initState();
   }
 
@@ -43,7 +40,9 @@ class _MapSampleState extends State<MapSample> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer_Tab().build(context, setState),
       appBar: AppBar(
+        backgroundColor: Colors.black,
         centerTitle: false,
         title: const Text('Title'),
         actions: [
@@ -59,7 +58,7 @@ class _MapSampleState extends State<MapSample> {
                 ),
               ),
               style: TextButton.styleFrom(
-                primary: Colors.green,
+                primary: Colors.white,
                 textStyle: const TextStyle(fontWeight: FontWeight.w600),
               ),
               child: const Text('ORIGIN'),
@@ -76,7 +75,7 @@ class _MapSampleState extends State<MapSample> {
                 ),
               ),
               style: TextButton.styleFrom(
-                primary: Colors.red,
+                primary: Colors.white,
                 textStyle: const TextStyle(fontWeight: FontWeight.w600),
               ),
               child: const Text('DEST'),
@@ -97,7 +96,8 @@ class _MapSampleState extends State<MapSample> {
               if (_origin != null) _origin!,
               if (_destination != null) _destination!
             },
-            polylines: {
+            polylines:
+            {
               if (_info != null)
                 Polyline(
                   polylineId: PolylineId('overview_polyline'),
@@ -110,7 +110,7 @@ class _MapSampleState extends State<MapSample> {
             },
             onLongPress: _addMarker,
           ),
-          if (_info != null)
+          if (_info != null)...[
             Positioned(
               top: 20.0,
               child: Container(
@@ -138,17 +138,21 @@ class _MapSampleState extends State<MapSample> {
                 ),
               ),
             ),
+          ]
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.black,
-        onPressed: () => _googleMapController.animateCamera(
-          _info != null
-              ? CameraUpdate.newLatLngBounds(_info!.bounds, 100.0)
-              : CameraUpdate.newCameraPosition(_initialCameraPosition),
+      floatingActionButton: Align(
+        alignment: Alignment.bottomLeft,
+        child: FloatingActionButton(
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.black,
+          onPressed: () => _googleMapController.animateCamera(
+            _info != null
+                ? CameraUpdate.newLatLngBounds(_info!.bounds, 100.0)
+                : CameraUpdate.newCameraPosition(_initialCameraPosition),
+          ),
+          child: const Icon(Icons.center_focus_strong),
         ),
-        child: const Icon(Icons.center_focus_strong),
       ),
     );
   }
@@ -157,6 +161,7 @@ class _MapSampleState extends State<MapSample> {
     if (_origin == null || (_origin != null && _destination != null)) {
       // Origin is not set OR Origin/Destination are both set
       // Set origin
+      Fluttertoast.showToast(msg: "Origin",backgroundColor: Colors.black26,textColor: Colors.white);
       setState(() {
         _origin = Marker(
           markerId: MarkerId('origin'),
@@ -172,6 +177,7 @@ class _MapSampleState extends State<MapSample> {
         _info = null;
       });
     } else {
+      Fluttertoast.showToast(msg: "Destination",backgroundColor: Colors.black26,textColor: Colors.white);
       // Origin is already set
       // Set destination
       setState(() {
@@ -185,8 +191,9 @@ class _MapSampleState extends State<MapSample> {
 
       // Get directions
       final directions = await DirectionsRepository()
-          .getDirections(origin: _origin!.position, destination: pos);
-      setState(() => _info = directions!);
+          .getDirections(origin: _origin!.position, destination: _destination!.position);
+      setState(() => _info = directions);
     }
   }
+
 }
