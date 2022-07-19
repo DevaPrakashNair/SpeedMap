@@ -1,199 +1,68 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong/latlong.dart';
 import 'package:psychomap/drawer.dart';
-
-import 'directions_model.dart';
-import 'directions_repository.dart';
 
 class MapSample extends StatefulWidget {
   const MapSample({Key? key}) : super(key: key);
+
   @override
   _MapSampleState createState() => _MapSampleState();
 }
 
 class _MapSampleState extends State<MapSample> {
-  static const _initialCameraPosition = CameraPosition(
-    target: LatLng(9.528030, 76.823066),
-    zoom: 11.5,
-  );
-
-  late GoogleMapController _googleMapController;
-  Marker? _origin;
-  Marker? _destination;
-  Directions? _info;
-
-
-  @override
-  void dispose() {
-    _googleMapController.dispose();
-    super.dispose();
-  }
-
-  @override
+  Position? position;
   void initState() {
     // TODO: implement initState
     super.initState();
+    getLoc();
   }
+  getLoc()async{
+    Geolocator.requestPermission();
+    position!=await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    setState(() {
+
+    });
 
 
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Drawer_Tab().build(context, setState),
       appBar: AppBar(
+        title: Text("Maps",style: TextStyle(color: Colors.white),),
         backgroundColor: Colors.black,
-        centerTitle: false,
-        title: const Text('Title'),
-        actions: [
-          if (_origin != null)
-            TextButton(
-              onPressed: () => _googleMapController.animateCamera(
-                CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                    target: _origin!.position,
-                    zoom: 14.5,
-                    tilt: 50.0,
-                  ),
-                ),
-              ),
-              style: TextButton.styleFrom(
-                primary: Colors.white,
-                textStyle: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-              child: const Text('ORIGIN'),
-            ),
-          if (_destination != null)
-            TextButton(
-              onPressed: () => _googleMapController.animateCamera(
-                CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                    target: _destination!.position,
-                    zoom: 14.5,
-                    tilt: 50.0,
-                  ),
-                ),
-              ),
-              style: TextButton.styleFrom(
-                primary: Colors.white,
-                textStyle: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-              child: const Text('DEST'),
-            )
-        ],
       ),
-      body: Stack(
-        alignment: Alignment.center,
-        children: [
-          GoogleMap(
-            buildingsEnabled: false ,
-            mapToolbarEnabled: true,
-            myLocationButtonEnabled: false,
-            zoomControlsEnabled: false,
-            initialCameraPosition: _initialCameraPosition,
-            onMapCreated: (controller) => _googleMapController = controller,
-            markers: {
-              if (_origin != null) _origin!,
-              if (_destination != null) _destination!
-            },
-            polylines:
-            {
-              if (_info != null)
-                Polyline(
-                  polylineId: PolylineId('overview_polyline'),
-                  color: Colors.red,
-                  width: 5,
-                  points: _info!.polylinePoints
-                      .map((e) => LatLng(e.latitude, e.longitude))
-                      .toList(),
-                ),
-            },
-            onLongPress: _addMarker,
-          ),
-          if (_info != null)...[
-            Positioned(
-              top: 20.0,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 6.0,
-                  horizontal: 12.0,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.yellowAccent,
-                  borderRadius: BorderRadius.circular(20.0),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black26,
-                      offset: Offset(0, 2),
-                      blurRadius: 6.0,
-                    )
-                  ],
-                ),
-                child: Text(
-                  '${_info!.totalDistance}, ${_info!.totalDuration}',
-                  style: const TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ]
-        ],
-      ),
-      floatingActionButton: Align(
-        alignment: Alignment.bottomLeft,
-        child: FloatingActionButton(
-          backgroundColor: Theme.of(context).primaryColor,
-          foregroundColor: Colors.black,
-          onPressed: () => _googleMapController.animateCamera(
-            _info != null
-                ? CameraUpdate.newLatLngBounds(_info!.bounds, 100.0)
-                : CameraUpdate.newCameraPosition(_initialCameraPosition),
-          ),
-          child: const Icon(Icons.center_focus_strong),
-        ),
-      ),
+      body: FlutterMap(
+          options: MapOptions(
+              center: LatLng(9.528878, 76.823465  )),
+          layers: [
+            TileLayerOptions(
+                urlTemplate:
+                "https://api.mapbox.com/styles/v1/deva212001/cl5sav1sv000c15qyvxylb4t4/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZGV2YTIxMjAwMSIsImEiOiJjbDVzYW04Z2QwbGNmM2puMDg2bnJpdGZnIn0.TOe4w5OaPTMvGant49e8cA",
+                additionalOptions: {
+                  "accessToken":"pk.eyJ1IjoiZGV2YTIxMjAwMSIsImEiOiJjbDVzYXEwZmUwNWp6M2NwM3BzcDF3YmhsIn0.HajoHUCaJ0N7iABkbR7QXg",
+                  "id":"mapbox.mapbox-bathymetry-v2"
+    }),
+            MarkerLayerOptions(markers: [
+              Marker(
+                  width: 45.0,
+                  height: 45.0,
+                  point: LatLng(40.73, -74.00),
+                  builder: (context) => Container(
+                    child: IconButton(
+                      icon: Icon(Icons.location_on),
+                      color: Colors.red,
+                      iconSize: 45.0,
+                      onPressed: () {
+                        print('Marker tapped');
+                      },
+                    ),
+                  ))
+            ])
+          ]),
     );
   }
-
-  void _addMarker(LatLng pos) async {
-    if (_origin == null || (_origin != null && _destination != null)) {
-      // Origin is not set OR Origin/Destination are both set
-      // Set origin
-      Fluttertoast.showToast(msg: "Origin",backgroundColor: Colors.black26,textColor: Colors.white);
-      setState(() {
-        _origin = Marker(
-          markerId: MarkerId('origin'),
-          infoWindow: const InfoWindow(title: 'Origin'),
-          icon:
-          BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-          position: pos,
-        );
-        // Reset destination
-        _destination = null;
-
-        // Reset info
-        _info = null;
-      });
-    } else {
-      Fluttertoast.showToast(msg: "Destination",backgroundColor: Colors.black26,textColor: Colors.white);
-      // Origin is already set
-      // Set destination
-      setState(() {
-        _destination = Marker(
-          markerId: MarkerId('destination'),
-          infoWindow: const InfoWindow(title: 'Destination'),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-          position: pos,
-        );
-      });
-
-      // Get directions
-      final directions = await DirectionsRepository()
-          .getDirections(origin: _origin!.position, destination: _destination!.position);
-      setState(() => _info = directions);
-    }
-  }
-
 }
