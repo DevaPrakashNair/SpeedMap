@@ -56,7 +56,7 @@ class _WeatherState extends State<WeatherPage> {
                 if (snapshot != null) {
                   this._weather = snapshot.data as WeatherModel;
                   if (this._weather == null) {
-                    return Text("error");
+                    return const CircularProgressIndicator();
                   } else {
                     return  Align(
                       alignment: Alignment.bottomRight,
@@ -64,7 +64,7 @@ class _WeatherState extends State<WeatherPage> {
                     );
                   }
                 } else {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 }
               },
               future: getCurrentWeather(),
