@@ -1,10 +1,12 @@
+import 'package:MyMap/searchPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
-import 'package:psychomap/drawer.dart';
-import 'package:psychomap/searchPage.dart';
+
+import 'drawer.dart';
+
 
 class MapSample extends StatefulWidget {
   const MapSample({Key? key}) : super(key: key);

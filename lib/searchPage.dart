@@ -1,7 +1,7 @@
+import 'package:MyMap/searchPage2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mapbox_autocomplete/flutter_mapbox_autocomplete.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:psychomap/searchPage2.dart';
 
 class Search extends StatefulWidget {
   const Search({Key? key}) : super(key: key);

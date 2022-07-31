@@ -1,6 +1,8 @@
+import 'package:MyMap/weather_app.dart';
 import 'package:flutter/material.dart';
-import 'package:psychomap/Review.dart';
-import 'package:psychomap/weather_app.dart';
+
+import 'Review.dart';
+
 
 class Drawer_Tab {
   Widget build(BuildContext context, setState) {

@@ -1,7 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:psychomap/Bloc/dataCollection.dart';
+
+import 'Bloc/dataCollection.dart';
 
 class Review extends StatefulWidget {
   const Review({Key? key}) : super(key: key);

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:bottom_sheet/bottom_sheet.dart';
+import 'package:MyMap/searchPage.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -8,10 +8,11 @@ import 'package:flutter_mapbox_autocomplete/flutter_mapbox_autocomplete.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong/latlong.dart';
-import 'package:psychomap/Model/DirectionModel.dart';
-import 'package:psychomap/drawer.dart';
-import 'package:psychomap/searchPage.dart';
+
 import 'package:http/http.dart' as http;
+
+import 'Model/DirectionModel.dart';
+import 'drawer.dart';
 
 class NavHome extends StatefulWidget {
   final Geometry start;
@@ -28,7 +29,7 @@ class _NavHomeState extends State<NavHome> {
   Position? position;
   var marker = <LatLng>[];
   var polyPoint = <LatLng>[];
-  var cord = [];
+  var check = 1;
   DirectionModel? directionModel;
 
   void initState() {
@@ -39,7 +40,7 @@ class _NavHomeState extends State<NavHome> {
         LatLng(widget.start.coordinates![1], widget.start.coordinates![0]));
     marker.add(LatLng(widget.end.coordinates![1], widget.end.coordinates![0]));
 
-    print("--->" + marker.toString());
+    //print("--->" + marker.toString());
   }
 
   getLoc() async {
@@ -81,12 +82,12 @@ class _NavHomeState extends State<NavHome> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const Search()));
               },
-              child: Icon(
+              minWidth: 3,
+              child: const Icon(
                 Icons.search,
                 color: Colors.white,
                 size: 35,
               ),
-              minWidth: 3,
             ),
           ],
         ),
@@ -96,10 +97,26 @@ class _NavHomeState extends State<NavHome> {
         builder: (context, snapshot) {
           if (snapshot != null) {
             directionModel = snapshot.data as DirectionModel;
-            print("Error----------->" + snapshot.error.toString());
+            //print("Error----------->" + snapshot.error.toString());
             if (directionModel == null) {
               return const Center(child: CircularProgressIndicator());
             } else {
+              int n = directionModel!.routes![0].legs![0].steps!.length;
+              for (int i = 0; i < n; i++) {
+                // polyPoint[i].longitude=directionModel!.routes![0].legs![0].steps![i].maneuver!.location![0];
+                // polyPoint[i].latitude=directionModel!.routes![0].legs![0].steps![i].maneuver!.location![1];
+                // cord.add(directionModel!.routes![0].geometry!.coordinates![i]);
+                polyPoint.add(LatLng(
+                    directionModel!
+                        .routes![0].legs![0].steps![i].intersections![0].location![1],
+                    directionModel!
+                        .routes![0].legs![0].steps![i].intersections![0].location![0]));
+              }
+
+              print("poly------------->");
+              print(polyPoint);
+              try {} catch (Exception) {}
+
               //print("route: "+directionModel!.routes![0].legs![0].steps![5].maneuver!.instruction!);
               return Stack(
                 children: [
@@ -141,34 +158,120 @@ class _NavHomeState extends State<NavHome> {
                                     ))
                           ]
                         ]),
-                        // PolylineLayerOptions(
-                        //   polylines: [
-                        //     Polyline(
-                        //       points: marker,
-                        //       strokeWidth: 5.0,
-                        //       color: Colors.red,
-                        //       borderStrokeWidth: 0.1
-                        //     )
-                        //   ]
-                        // )
+                          PolylineLayerOptions(polylines: [
+                            Polyline(
+                              borderColor: Colors.white10,
+                                points: polyPoint,//.toSet().toList(),
+                                strokeWidth: 5.0,
+                                color: Colors.red,
+                                borderStrokeWidth: 0.1
+                            )
+                          ]
+                          )
                       ],
                     ),
                   ),
                   Align(
-                      alignment: Alignment.bottomCenter,
-                      child: ElevatedButton(
-                        child: const Text('Show maneuver'),
-                        onPressed: () {
-                          showFlexibleBottomSheet(
-                            minHeight: 0,
-                            initHeight: 0.8,
-                            maxHeight: 0.8,
-                            context: context,
-                            builder: _buildBottomSheet,
-                            isExpand: true,
-                          );
-                        },
-                      )),
+                    alignment: Alignment.bottomCenter,
+                    child: CarouselSlider.builder(
+                        itemCount:
+                            directionModel!.routes![0].legs![0].steps!.length,
+                        options: CarouselOptions(
+                            autoPlay: false,
+                            // autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                            enableInfiniteScroll: false),
+                        itemBuilder: (BuildContext context, int i, int index) =>
+                            Container(
+                                width: MediaQuery.of(context).size.width,
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 5.0),
+                                child: Card(
+                                  elevation: 10,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15)),
+                                  shadowColor: Colors.black,
+                                  child: (directionModel!
+                                              .routes![0].legs![0].steps !=
+                                          null)
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Stack(
+                                            children: [
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    directionModel!
+                                                        .routes![0]
+                                                        .legs![0]
+                                                        .steps![index]
+                                                        .maneuver!
+                                                        .instruction!,
+                                                    style: const TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 20,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  if (index !=
+                                                      directionModel!
+                                                              .routes![0]
+                                                              .legs![0]
+                                                              .steps!
+                                                              .length -
+                                                          1) ...[
+                                                    ((directionModel!
+                                                                .routes![0]
+                                                                .legs![0]
+                                                                .steps![index]
+                                                                .distance!) >
+                                                            1000)
+                                                        ? Text(
+                                                            "Distance: ${(directionModel!.routes![0].legs![0].steps![index].distance! / 1000).toStringAsFixed(3)}km",
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        15),
+                                                          )
+                                                        : (directionModel!
+                                                                    .routes![0]
+                                                                    .legs![0]
+                                                                    .steps![
+                                                                        index]
+                                                                    .distance !=
+                                                                0)
+                                                            ? Text(
+                                                                "Distance: ${(directionModel!.routes![0].legs![0].steps![index].distance!).toStringAsFixed(3)}m",
+                                                                style:
+                                                                    const TextStyle(
+                                                                        fontSize:
+                                                                            15),
+                                                              )
+                                                            : const SizedBox(),
+                                                    Text(
+                                                        "Duration:${(directionModel!.routes![0].legs![0].steps![index].duration! / 60).toStringAsFixed(2)}min"),
+                                                    Text(
+                                                        "Fuel consumption\nBike: ${(((directionModel!.routes![0].legs![0].steps![index].distance! / 1000) * 0.03)) < 0.001 ? (((directionModel!.routes![0].legs![0].steps![index].distance! / 1000) * 0.03).toStringAsFixed(5)) : (((directionModel!.routes![0].legs![0].steps![index].distance! / 1000) * 0.03).toStringAsFixed(2))} L\nCar: ${(((directionModel!.routes![0].legs![0].steps![index].distance! / 1000) * 0.1)) < 0.01 ? (((directionModel!.routes![0].legs![0].steps![index].distance! / 1000) * 0.1).toStringAsFixed(5)) : (((directionModel!.routes![0].legs![0].steps![index].distance! / 1000) * 0.1).toStringAsFixed(2))} L")
+                                                  ]
+                                                ],
+                                              ),
+                                              const Align(
+                                                alignment:
+                                                    Alignment.bottomRight,
+                                                child: Icon(
+                                                  Icons.assistant_photo,
+                                                  color: Colors.black,
+                                                  size: 50,
+                                                ),
+                                              )
+                                            ],
+                                          ))
+                                      : const SizedBox(),
+                                ))),
+                  ),
                 ],
               );
             }
@@ -177,59 +280,6 @@ class _NavHomeState extends State<NavHome> {
           }
         },
         future: getDirection(widget.start, widget.end),
-      ),
-    );
-  }
-
-  Widget _buildBottomSheet(
-    BuildContext context,
-    ScrollController scrollController,
-    double bottomSheetOffset,
-  ) {
-    return Material(
-      child: Container(
-        height: 400,
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.topRight,
-              child: ElevatedButton(
-                child: const Icon(Icons.close),
-                onPressed: () => Navigator.pop(context),
-              ),
-            ),
-            ListView.builder(
-              controller: scrollController,
-              //physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: directionModel!.routes![0].legs![0].steps!.length,
-              itemBuilder: (context, index) {
-                if (directionModel!.routes![0].legs![0].steps != null) {
-                  return Column(
-                    children: [
-                      Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              Text(
-                                directionModel!.routes![0].legs![0]
-                                    .steps![index].maneuver!.instruction!,
-                                style: TextStyle(color: Colors.black),
-                              )
-                            ],
-                          )),
-                      Divider(
-                        color: Colors.black,
-                      ),
-                    ],
-                  );
-                } else {
-                  return SizedBox();
-                }
-              },
-            )
-          ],
-        ),
       ),
     );
   }
@@ -249,10 +299,10 @@ class _NavHomeState extends State<NavHome> {
     final response = await http.get(Uri.parse(url));
     //print(response.body);
     if (response.statusCode == 200) {
-      print("-------->" + json.decode(response.body).toString());
+      //print("-------->" + json.decode(response.body).toString());
       directionModel = DirectionModel.fromJson(json.decode(response.body));
     } else {}
-    print("uuid------------->" + directionModel!.uuid.toString());
+    //print("uuid------------->" + directionModel!.uuid.toString());
     return directionModel;
   }
 }
