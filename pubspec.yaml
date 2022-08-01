@@ -34,13 +34,11 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  google_maps_flutter: ^0.5.33
-  dio: ^4.0.0
   fluttertoast: ^8.0.9
   weather: ^2.0.1
   http: ^0.13.4
-  geocoding: ^1.0.5
-  geolocator: ^6.2.1
+  geocoding: ^2.0.4
+  geolocator: ^9.0.1
   equatable: ^2.0.3
   flutter_bloc: ^8.0.1
   flutter_map: ^0.12.0
@@ -48,7 +46,10 @@ dependencies:
   flutter_mapbox_autocomplete: ^2.0.0
   flutter_polyline_points: ^1.0.0
   carousel_slider: ^4.1.1
-  bottom_sheet: ^3.1.1
+  connectivity_plus: ^2.3.0
+  geolocator_platform_interface: ^4.0.6
+  plugin_platform_interface: ^2.1.2
+
 
 
 

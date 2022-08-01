@@ -1,8 +1,8 @@
 
+import 'package:MyMap/Bloc/reviewBloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'Bloc/dataCollection.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Review extends StatefulWidget {
   const Review({Key? key}) : super(key: key);
@@ -21,13 +21,13 @@ class _ReviewState extends State<Review> {
 
   @override
   Widget build(BuildContext context) {
-    getData(){
-      context.read<TokenManagerBloc>().a=true;
-      context.read<TokenManagerBloc>().place!=_place.text;
-      context.read<TokenManagerBloc>().review!=_review.text;
-      print(context.read<TokenManagerBloc>().place!);
-
-    }
+    // getData(){
+    //   context.read<TokenManagerBloc>().a=true;
+    //   context.read<TokenManagerBloc>().place!=_place.text;
+    //   context.read<TokenManagerBloc>().review!=_review.text;
+    //   print(context.read<TokenManagerBloc>().place!);
+    //
+    // }
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -67,54 +67,48 @@ class _ReviewState extends State<Review> {
               const SizedBox(
                 height: 40,
               ),
-              Center(
-                child: MaterialButton(onPressed: () {
-                  getData();
-                  setState(() {
-
-                  });
-                },
-                  color: Colors.green,
-                  child: const Text("Save review",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20
-                    ),
-                  ),
-                ),
+              MaterialButton(
+                height: 50,
+                minWidth: MediaQuery.of(context).size.width,
+                onPressed: () {
+                BlocProvider.of<EnterReviewBloc>(context).add(CheckReview(
+                  location: _place.text,
+                  review: _review.text
+                ));
+              },
+                color: Colors.green,
+                child: BlocConsumer<EnterReviewBloc,EnterReviewState>(
+                  builder: (context, state) {
+                    if(state is CheckingReview){
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    else{
+                      return const Text(
+                        "Enter review"
+                      );
+                    }
+                  },
+                  listener: (context,state){
+                    if(state is ReviewChecked){
+                      Fluttertoast.showToast(msg: "Review entered successfully");
+                    }
+                    else if(state is ReviewError){
+                      Fluttertoast.showToast(msg: state.error);
+                    }
+                    else{
+                      Fluttertoast.showToast(msg: "Error");
+                    }
+                  },
+                )
               ),
-              if(context.read<TokenManagerBloc>().a)...[
-                Container(
-                  height: MediaQuery.of(context).size.height*0.25,
-                  child: SingleChildScrollView(
-                    child: ListView.separated(
-                        shrinkWrap: true,
-                        itemCount: 1,
-                        // The list items
-                        itemBuilder: (context, index) {
-                          return Text(
-                            _place.text+"-\n"+_review.text,
-                            style: const TextStyle(fontSize: 24),
-                          );
-                        },
-                        // The separators
-                        separatorBuilder: (context, index) {
-                          return Divider(
-                            color: Theme.of(context).primaryColor,
-                          );
-                        }
-                    ),
-                  ),
-                ),
-              ]
             ],
           ),
         ),
       ),
 
     );
-
   }
-
 }
 

@@ -1,3 +1,5 @@
+import 'package:MyMap/Bloc/reviewBloc.dart';
+import 'package:MyMap/Bloc/viewReviewBloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,6 +19,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<TokenManagerBloc>(create: (context) => TokenManagerBloc()),
+        BlocProvider<EnterReviewBloc>(create: (context) => EnterReviewBloc()),
+        BlocProvider<ViewReviewBloc>(create: (context) => ViewReviewBloc())
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

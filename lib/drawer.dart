@@ -1,3 +1,4 @@
+import 'package:MyMap/viewReview.dart';
 import 'package:MyMap/weather_app.dart';
 import 'package:flutter/material.dart';
 
@@ -56,7 +57,10 @@ class Drawer_Tab {
           Divider(),
           InkWell(
               onTap: (){
-
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ViewReview()));
               },
               child: Container(
                 height: 40,
@@ -64,7 +68,7 @@ class Drawer_Tab {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("",style: TextStyle(fontSize: 25),),
+                    Text("View reviews",style: TextStyle(fontSize: 25),),
                   ],
                 ),
               )
