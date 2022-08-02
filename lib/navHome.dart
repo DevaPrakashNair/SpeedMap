@@ -158,16 +158,16 @@ class _NavHomeState extends State<NavHome> {
                                     ))
                           ]
                         ]),
-                          PolylineLayerOptions(polylines: [
-                            Polyline(
-                              borderColor: Colors.white10,
-                                points: polyPoint,//.toSet().toList(),
-                                strokeWidth: 5.0,
-                                color: Colors.red,
-                                borderStrokeWidth: 0.1
-                            )
-                          ]
-                          )
+                          // PolylineLayerOptions(polylines: [
+                          //   Polyline(
+                          //     borderColor: Colors.white10,
+                          //       points: polyPoint,//.toSet().toList(),
+                          //       strokeWidth: 5.0,
+                          //       color: Colors.red,
+                          //       borderStrokeWidth: 0.1
+                          //   )
+                          // ]
+                          // )
                       ],
                     ),
                   ),

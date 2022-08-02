@@ -8,7 +8,7 @@ class WebClient {
   //static const ip = "https://parishprojects.herokuapp.com";
   //static const ip ="http://192.168.220.171:4000";
   // static const ip="http://192.168.228.171:4000";
-  static const ip="http://192.168.43.58:5001";
+  static const ip="http://192.168.1.103:5001";
 
   static Future<dynamic> post(url, data) async {
     Map? sendData = {};
