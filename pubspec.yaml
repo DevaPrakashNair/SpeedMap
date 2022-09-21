@@ -49,6 +49,9 @@ dependencies:
   connectivity_plus: ^2.3.0
   geolocator_platform_interface: ^4.0.6
   plugin_platform_interface: ^2.1.2
+  location: ^4.4.0
+  custom_marker: ^1.0.0
+
 
 
 

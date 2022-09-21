@@ -39,7 +39,7 @@ class _NavHomeState extends State<NavHome> {
     marker.add(
         LatLng(widget.start.coordinates![1], widget.start.coordinates![0]));
     marker.add(LatLng(widget.end.coordinates![1], widget.end.coordinates![0]));
-
+    polyPoint=[];
     //print("--->" + marker.toString());
   }
 
@@ -103,21 +103,28 @@ class _NavHomeState extends State<NavHome> {
             } else {
               int n = directionModel!.routes![0].legs![0].steps!.length;
               for (int i = 0; i < n; i++) {
-                // polyPoint[i].longitude=directionModel!.routes![0].legs![0].steps![i].maneuver!.location![0];
-                // polyPoint[i].latitude=directionModel!.routes![0].legs![0].steps![i].maneuver!.location![1];
-                // cord.add(directionModel!.routes![0].geometry!.coordinates![i]);
+                int cordLength=directionModel!.routes![0].geometry!.coordinates!.length;
+               // List<dynamic> cord=directionModel!.routes![0].geometry!.coordinates!;
+                //
+                //  print(cord);
+                // for(int j=0;j<cordLength;j++){
+                //   polyPoint.add(LatLng(cord[j].[0],cord[j][1] ));
+                // }
+
+
+
                 polyPoint.add(LatLng(
                     directionModel!
-                        .routes![0].legs![0].steps![i].intersections![0].location![1],
+                        .routes![0].legs![0].steps![i].intersections![0]
+                        .location![1],
                     directionModel!
-                        .routes![0].legs![0].steps![i].intersections![0].location![0]));
+                        .routes![0].legs![0].steps![i].intersections![0]
+                        .location![0]));
               }
+              polyPoint=polyPoint.toSet().toList(); //to remove all duplicate entries
 
-              print("poly------------->");
-              print(polyPoint);
-              try {} catch (Exception) {}
 
-              //print("route: "+directionModel!.routes![0].legs![0].steps![5].maneuver!.instruction!);
+
               return Stack(
                 children: [
                   SizedBox(
@@ -158,16 +165,18 @@ class _NavHomeState extends State<NavHome> {
                                     ))
                           ]
                         ]),
-                          // PolylineLayerOptions(polylines: [
-                          //   Polyline(
-                          //     borderColor: Colors.white10,
-                          //       points: polyPoint,//.toSet().toList(),
-                          //       strokeWidth: 5.0,
-                          //       color: Colors.red,
-                          //       borderStrokeWidth: 0.1
-                          //   )
-                          // ]
-                          // )
+                          PolylineLayerOptions(polylines: [
+                            Polyline(
+                                borderColor: Colors.white10,
+                                points: polyPoint,//.toSet().toList(),
+
+                                // points: directionModel!.routes![0].geometry!.coordinates as List<LatLng>,
+                                strokeWidth: 5.0,
+                                color: Colors.red,
+                                borderStrokeWidth: 0.1
+                            )
+                          ]
+                          )
                       ],
                     ),
                   ),
