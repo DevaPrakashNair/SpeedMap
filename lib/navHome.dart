@@ -263,18 +263,15 @@ class _NavHomeState extends State<NavHome> {
                                                     Text(
                                                         "Duration:${(directionModel!.routes![0].legs![0].steps![index].duration! / 60).toStringAsFixed(2)}min"),
                                                     Text(
-                                                        "Fuel consumption\nBike: ${(((directionModel!.routes![0].legs![0].steps![index].distance! / 1000) * 0.03)) < 0.001 ? (((directionModel!.routes![0].legs![0].steps![index].distance! / 1000) * 0.03).toStringAsFixed(5)) : (((directionModel!.routes![0].legs![0].steps![index].distance! / 1000) * 0.03).toStringAsFixed(2))} L\nCar: ${(((directionModel!.routes![0].legs![0].steps![index].distance! / 1000) * 0.1)) < 0.01 ? (((directionModel!.routes![0].legs![0].steps![index].distance! / 1000) * 0.1).toStringAsFixed(5)) : (((directionModel!.routes![0].legs![0].steps![index].distance! / 1000) * 0.1).toStringAsFixed(2))} L")
+                                                        "Fuel consumption\nBike: ${(((directionModel!.routes![0].legs![0].steps![index].distance! / 1000) * 0.03)) < 0.001 ? (((directionModel!.routes![0].legs![0].steps![index].distance! / 1000) * 0.03).toStringAsFixed(5)) : (((directionModel!.routes![0].legs![0].steps![index].distance! / 1000) * 0.03).toStringAsFixed(2))} L\nCar: ${(((directionModel!.routes![0].legs![0].steps![index].distance! / 1000) * 0.1)) < 0.01 ? (((directionModel!.routes![0].legs![0].steps![index].distance! / 1000) * 0.1).toStringAsFixed(5)) : (((directionModel!.routes![0].legs![0].steps![index].distance! / 1000) * 0.1).toStringAsFixed(2))} L"),
                                                   ]
                                                 ],
                                               ),
-                                              const Align(
+                                              Align(
                                                 alignment:
                                                     Alignment.bottomRight,
-                                                child: Icon(
-                                                  Icons.assistant_photo,
-                                                  color: Colors.black,
-                                                  size: 50,
-                                                ),
+                                                child: Text((directionModel!.routes![0].legs![0].steps![index].intersections![0].mapboxStreetsV8!.c_lass=='trunk')?"Max Speed: 30kmph":(directionModel!.routes![0].legs![0].steps![index].intersections![0].mapboxStreetsV8!.c_lass=='street')?"Max Speed: 25kmph":(directionModel!.routes![0].legs![0].steps![index].intersections![0].mapboxStreetsV8!.c_lass=='tertiary')?"Max Speed: 45kmph":(directionModel!.routes![0].legs![0].steps![index].intersections![0].mapboxStreetsV8!.c_lass=='roundabout')?"Max Speed: 5kmph":(directionModel!.routes![0].legs![0].steps![index].intersections![0].mapboxStreetsV8!.c_lass=='secondary')?"Max Speed: 60kmph":"")
+                                                ,
                                               )
                                             ],
                                           ))
