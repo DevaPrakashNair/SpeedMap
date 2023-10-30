@@ -195,7 +195,7 @@ class _WeatherState extends State<WeatherPage> {
     String lat=position!.latitude.toString();
     String lon=position!.longitude.toString();
 
-    String apiKey = "5b6906720382e407972d75013849d0b7";
+    String apiKey = <API KEY>;
     var url = "https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&appid=$apiKey&units=metric";
 
     final response = await http.get(
