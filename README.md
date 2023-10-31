@@ -1,16 +1,7 @@
-# psychomap
+# SpeedMap
 
-A new Flutter project.
+An android application that determines the speed that can be safely achieved on a road. The speed is determined by the type of road and the road standards in India and is only compactable on the roads of India.
 
-## Getting Started
+## Tools used
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This project uses various APIs provided by MapBox for rendering the map and determining the type of road the user chooses to travel on. Also used OpenWeatherMap API for determining the weather conditions at the particular location of the user that can be used for trip planning. In addition to this, a section for sharing and viewing experiences filtered by location is also provided.
